@@ -1,0 +1,17 @@
+{
+  "name": "syook_assignment",
+  "version": "1.0.0",
+  "description": "Input Output Operations with socket.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vaidyahimanshu502/SYOOK_assignment"
+  },
+  "author": "Himanshu Vaidya",
+  "license": "ISC"
+}
