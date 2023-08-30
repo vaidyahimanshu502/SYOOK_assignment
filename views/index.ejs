@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Data Dashboard</title>
+</head>
+<body>
+  <h1>Real-Time Data Dashboard</h1>
+  <div id="data-container"></div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    socket.on('messageStream', (messageStream) => {
+      const encryptedMessages = messageStream.split('|');
+      const dataContainer = document.getElementById('data-container');
+
+      encryptedMessages.forEach((encryptedMessage) => {
+        // Decrypt and process each message
+        const decipher = crypto.createDecipher('aes-256-ctr', encryptionKey);
+        const decryptedMessage = decipher.update(encryptedMessage, 'hex', 'utf8') + decipher.final('utf8');
+        const payload = JSON.parse(decryptedMessage);
+
+        // Display data in the frontend
+        const dataItem = document.createElement('div');
+        dataItem.textContent = JSON.stringify(payload);
+        dataContainer.appendChild(dataItem);
+      });
+    });
+  </script>
+</body>
+</html>
