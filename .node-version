@@ -1,0 +1,6 @@
+services:
+  - name: my-socket
+    type: web
+    env:
+      - key: NODE_VERSION
+        value: 14
