@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const MongoClient = require("mongodb").MongoClient;
 const ejs = require("ejs");
 const path = require("path");
+require('dotenv').config()
 
 const app = express();
 const server = http.createServer(app);
