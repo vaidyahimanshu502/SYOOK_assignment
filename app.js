@@ -11,9 +11,9 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 const port = process.env.PORT_NUMBER || 8080;
-const mongoUrl = process.env.MONGODB_URL;
+const mongoUrl = 'mongodb://127.0.0.1:27017'
 const dbName = "timeSeriesDB";
-const encryptionKey = "_my_secret_key_"; // Replace with your actual encryption key
+const encryptionKey = "_my_secret_key"; // Replace with your actual encryption key
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
