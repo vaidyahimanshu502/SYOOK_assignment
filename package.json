@@ -8,9 +8,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "engines": {
-    "node": "18.14.0"
-  },
+ 
   
   "repository": {
     "type": "git",
