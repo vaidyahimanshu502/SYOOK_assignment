@@ -1,33 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Real-Time Data Dashboard</title>
-</head>
-<body>
-  <h1>Real-Time Data Dashboard</h1>
-  <div id="data-container"></div>
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-Time Data Dashboard</title>
+    <style>
+      #messageContainer {
+        max-width: 100%; /* Set the maximum height of the container */
+        overflow-y: hidden; /* Add vertical scrollbar if content overflows */
+        border: 1px solid #ccc; /* Optional: Add a border for visual separation */
+        padding: 10px; /* Optional: Add padding for spacing */
+      }
 
-    socket.on('messageStream', (messageStream) => {
-      const encryptedMessages = messageStream.split('|');
-      const dataContainer = document.getElementById('data-container');
+      #messageContainer p {
+        white-space: normal; /* Allow line breaks within messages */
+        margin-bottom: 5px; /* Add spacing between messages */
+      }
+    </style>
+  </head>
 
-      encryptedMessages.forEach((encryptedMessage) => {
-        // Decrypt and process each message
-        const decipher = crypto.createDecipher('aes-256-ctr', encryptionKey);
-        const decryptedMessage = decipher.update(encryptedMessage, 'hex', 'utf8') + decipher.final('utf8');
-        const payload = JSON.parse(decryptedMessage);
+  <body>
+    <h1>Real-Time Data Dashboard</h1>
+    <div id="messageContainer">
+      <h2>Encrypted data</h2>
+    </div>
+    <div id="dataDisplay">
+      <h2>Valid Data</h2>
+      <ul id="validDataList"></ul>
+      <p>Success Rate: <span id="successRate">0%</span></p>
+    </div>
 
-        // Display data in the frontend
-        const dataItem = document.createElement('div');
-        dataItem.textContent = JSON.stringify(payload);
-        dataContainer.appendChild(dataItem);
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const emitterSocket = io('/emitter'); // Connect to the /emitter namespace
+    
+      let totalMessages = 0;
+      let successCount = 0;
+    
+      emitterSocket.on('connect', () => {
+        console.log('Emitter socket connected');
       });
-    });
-  </script>
-</body>
+    
+      emitterSocket.on('messageStream', (message) => {
+        console.log('Received message:', message);
+        totalMessages++;
+        updateMessageContainer(message); // Call the function to update the message container
+      });
+    
+      function updateMessageContainer(message) {
+        const messageContainer = document.getElementById('messageContainer');
+        const newMessage = document.createElement('p');
+        // newMessage.textContent = message;
+        newMessage.textContent = JSON.stringify(message, null, 2)
+    
+        messageContainer.appendChild(newMessage);
+    
+        // Assuming you have a function validateMessage(message) to validate the message
+        if (validateMessage(message)) {
+          successCount++;
+          updateDataDisplay();
+        }
+      }
+    
+      function updateDataDisplay() {
+        const successRate = (successCount / totalMessages) * 100;
+        const successRateElement = document.getElementById('successRate');
+        successRateElement.textContent = `${successRate.toFixed(2)}%`;
+      }
+    
+      function validateMessage(message) {
+        // Implement your validation logic here
+        // Return true if the message is valid, otherwise return false
+        return true;
+      }
+    </script>
+  </body>
 </html>
